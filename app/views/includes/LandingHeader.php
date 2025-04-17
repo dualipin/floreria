@@ -8,10 +8,15 @@
                 <li class="nav-item me-3"><a class="nav-link text-decoration-none" href="<?= INITIAL_ROUTE . '/home/productos' ?>">Productos</a></li>
                 <li class="nav-item"><a class="nav-link text-decoration-none" href="<?= INITIAL_ROUTE . '/#contacto' ?>">Contactos</a></li>
             </ul>
-            <button class="btn btn-success rounded-3 text-decoration-none ms-3" data-bs-toggle="modal" data-bs-target="#loginModal" type="button">
-                <i class="bi bi-person-circle"></i>
-                <span>Iniciar Sesión</span>
-            </button>
+            <?php
+            if (isset($_SESSION['usuario']['rfc'])) : ?>
+                <a href="<?= INITIAL_ROUTE . '/auth/logout' ?>" class="btn btn-danger ms-3 rounded-3 text-decoration-none">Cerrar Sesión</a>
+            <?php else : ?>
+                <button class="btn btn-success rounded-3 text-decoration-none ms-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Iniciar Sesión</span>
+                </button>
+            <?php endif; ?>
             <div class="dropdown ms-3">
                 <button class="btn btn-light dropdown-toggle" type="button" id="dropdownCart" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-cart3 fs-4"></i>
@@ -45,10 +50,15 @@
         </ul>
 
         <div class="d-flex flex-column align-items-center mt-3">
-            <button class="btn btn-success rounded-3 text-decoration-none mb-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button">
-                <i class="bi bi-person-circle"></i>
-                <span>Iniciar Sesión</span>
-            </button>
+            <?php
+            if (isset($_SESSION['usuario']['rfc'])) : ?>
+                <a href="<?= INITIAL_ROUTE . '/auth/logout' ?>" class="btn btn-danger rounded-3 text-decoration-none mb-2">Cerrar Sesión</a>
+            <?php else : ?>
+                <button class="btn btn-success rounded-3 text-decoration-none mb-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Iniciar Sesión</span>
+                </button>
+            <?php endif; ?>
             <div class="dropdown">
                 <button class="btn btn-light dropdown-toggle" type="button" id="dropdownCartMobile" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="<?= INITIAL_ROUTE ?>/assets/img/car.svg" id="img-carrito" alt="carrito">

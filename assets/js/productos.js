@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Obtener valores del formulario
         let clave = document.getElementById("claveProducto").value;
         let nombre = document.getElementById("nombreProducto").value;
-        let descripcion = document.getElementById("descripcionProducto").value;
+        let description = document.getElementById("descripcionProducto").value;
         let fechaEntrada = document.getElementById("fechaEntrada").value;
         let estado = document.getElementById("estadoProducto").value;
         let tipo = document.getElementById("tipoProducto").value;
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
             nuevaFila.innerHTML = `
                 <td>${clave}</td>
                 <td>${nombre}</td>
-                <td>${descripcion}</td>
+                <td>${description}</td>
                 <td>${fechaEntrada}</td>
                 <td>${estado}</td>
                 <td>${tipo}</td>
@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // CERRAR MODAL DESPUÉS DE REGISTRAR PRODUCTO
 // =======================
 function cerrarModalProducto() {
-    let modal = bootstrap.Modal.getInstance(document.getElementById("modalRegistrarProducto"));
+    let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("modalRegistrarProducto"));
     modal.hide();
     document.getElementById("formProducto").reset();
 }

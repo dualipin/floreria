@@ -2,8 +2,13 @@
 
 namespace Core;
 
+use PDO;
+
 class Controller
 {
+    protected PDO $db;
+
+
     protected $layout = 'BaseLayout';
 
     public function setLayout(string $layout)

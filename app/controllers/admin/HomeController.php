@@ -6,7 +6,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $this->view('admin/HomeView');
+        $this->view('admin/Super/HomeView');
     }
 
     public function getData()

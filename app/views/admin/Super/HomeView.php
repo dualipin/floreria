@@ -82,8 +82,8 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Descripción</label>
-                            <textarea class="form-control" id="descripcionProducto"></textarea>
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="descriptionProducto"></textarea>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-4">

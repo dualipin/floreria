@@ -1,5 +1,7 @@
 <?php
+
 namespace Core;
+
 use PDO;
 use PDOException;
 
@@ -21,7 +23,47 @@ class Database
         }
     }
 
-    public function getConnection(){
+    public function getConnection()
+    {
         return $this->pdo;
+    }
+}
+
+class DatabaseSqlite
+{
+    private $pdo;
+    public function __construct()
+    {
+        $this->pdo = new PDO('sqlite:' . __DIR__ . '/../db/floreria.db');
+
+        // // Check if tables exist, if not, create them
+        // $query = "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';";
+        // $result = $this->pdo->query($query);
+
+        // if ($result->fetch() === false) {
+        //     $this->createAll();
+        // }
+
+        $this->createAll();
+    }
+
+    public function getConnection()
+    {
+        return $this->pdo;
+    }
+
+    private function createAll() {
+        $sql = file_get_contents(__DIR__ . '/../db/floreria.sql');
+
+        if ($sql) {
+            try {
+                $this->pdo->exec($sql);
+                $this->pdo->exec("PRAGMA foreign_keys = ON;"); // Activar las claves foráneas
+            } catch (PDOException $e) {
+                throw new \Exception("Failed to execute SQL: " . $e->getMessage());
+            }
+        } else {
+            throw new \Exception("SQL file not found or empty.");
+        }
     }
 }
