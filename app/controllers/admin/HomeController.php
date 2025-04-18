@@ -1,21 +1,33 @@
 <?php
-namespace App\Controllers\Admin;
-use Core\Controller;
 
-class HomeController extends Controller
+namespace App\Controllers\Admin;
+
+use BaseAdminController;
+
+require_once __DIR__.'/BaseAdminController.php';
+
+class HomeController extends BaseAdminController
 {
+
     public function index()
     {
-        $this->view('admin/Super/HomeView');
+        $this->view('admin/MainView');
     }
 
-    public function getData()
+    public function servicios()
     {
-        header('Content-Type: application/json');
-        $data = [
-            'message' => 'Hello from the dashboard!',
-            'status' => 'success'
-        ];
-        print json_encode($data);
+        $this->view('admin/ServiciosView', data: [
+            'titulo' => 'Servicios',
+        ]);
+    }
+
+    public function productos()
+    {
+        $this->view('admin/ProductosView');
+    }
+
+    public function promociones()
+    {
+        $this->view('admin/PromocionesView');
     }
 }

@@ -12,30 +12,32 @@
             if (isset($_SESSION['usuario']['rfc'])) : ?>
                 <a href="<?= INITIAL_ROUTE . '/auth/logout' ?>" class="btn btn-danger ms-3 rounded-3 text-decoration-none">Cerrar Sesión</a>
             <?php else : ?>
-                <button class="btn btn-success rounded-3 text-decoration-none ms-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button">
+                <button class="btn btn-success rounded-3 text-decoration-none ms-4" data-bs-toggle="modal" data-bs-target="#loginModal" type="button">
                     <i class="bi bi-person-circle"></i>
                     <span>Iniciar Sesión</span>
                 </button>
             <?php endif; ?>
-            <div class="dropdown ms-3">
-                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownCart" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-cart3 fs-4"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownCart">
-                    <li>
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Precio</th>
-                                </tr>
-                            </thead>
-                            <tbody id="lista-carrito"></tbody>
-                        </table>
-                    </li>
-                    <li><a href="#" id="Vaciar-carrito" class="dropdown-item text-center btn btn-danger">Vaciar Carrito</a></li>
-                </ul>
-            </div>
+            <?php if (isset($_SESSION['usuario'])): ?>
+                <div class="dropdown ms-3">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownCart" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-cart3 fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownCart">
+                        <li>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lista-carrito"></tbody>
+                            </table>
+                        </li>
+                        <li><a href="#" id="Vaciar-carrito" class="dropdown-item text-center btn btn-danger">Vaciar Carrito</a></li>
+                    </ul>
+                </div>
+            <?php endif ?>
         </div>
         <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <i class="bi bi-list fs-3"></i>
@@ -59,25 +61,27 @@
                     <span>Iniciar Sesión</span>
                 </button>
             <?php endif; ?>
-            <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownCartMobile" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="<?= INITIAL_ROUTE ?>/assets/img/car.svg" id="img-carrito" alt="carrito">
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownCartMobile">
-                    <li>
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Precio</th>
-                                </tr>
-                            </thead>
-                            <tbody id="lista-carrito"></tbody>
-                        </table>
-                    </li>
-                    <li><a href="#" id="Vaciar-carrito" class="dropdown-item text-center btn btn-danger">Vaciar Carrito</a></li>
-                </ul>
-            </div>
+            <?php if (!isset($_SESSION['usuario'])): ?>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownCartMobile" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="<?= INITIAL_ROUTE ?>/assets/img/car.svg" id="img-carrito" alt="carrito">
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownCartMobile">
+                        <li>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lista-carrito"></tbody>
+                            </table>
+                        </li>
+                        <li><a href="#" id="Vaciar-carrito" class="dropdown-item text-center btn btn-danger">Vaciar Carrito</a></li>
+                    </ul>
+                </div>
+            <?php endif ?>
         </div>
     </div>
 </div>
@@ -102,6 +106,9 @@
                             <label for="password" class="form-label">Contraseña</label>
                             <input type="password" class="form-control" name="password" id="password" placeholder="Contraseña" required>
                         </div>
+
+                        <div class="alert alert-danger d-none" id="loginError" role="alert"> </div>
+
                         <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
                         <div class="mt-3 text-center">
                             <span>¿No tienes una cuenta?</span>
@@ -124,6 +131,7 @@
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent the default form submission behavior
         const formData = new FormData(loginFormEl); // Create a FormData object from the form element
+        const alertEl = document.getElementById('loginError')
         const data = Object.fromEntries(formData.entries()); // Convert FormData to a plain object
         const url = '<?= INITIAL_ROUTE . '/auth/login' ?>'; // Define the URL for the login request
 
@@ -139,15 +147,20 @@
 
             if (result.status === 'success') {
                 // If the login is successful, redirect to the home page
+                alertEl.classList.add('d-none')
                 window.location.href = result.to;
             } else {
                 // If the login fails, display an error message
-                alert(result.message || 'Error al iniciar sesión.'); // Show an alert with the error message
-            }
-
-        } catch (error) {
-            console.error('Error:', error); // Log any errors to the console
+                alertEl.classList.remove('d-none');
+                alertEl.innerText = 'Verificando...';
+                setTimeout(() => {
+                    alertEl.innerText = result.message || 'Error al iniciar sesión.'; // Show an alert with the error message
+                }, 200);
         }
+
+    } catch (error) {
+        console.error('Error:', error); // Log any errors to the console
+    }
     }
 
     loginFormEl.addEventListener('submit', handleSubmit); // Attach the handleSubmit function to the form's submit event

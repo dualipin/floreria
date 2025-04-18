@@ -13,6 +13,7 @@ class AuthController extends Controller
     {
         $this->db = (new DatabaseSqlite())->getConnection();
     }
+
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -90,6 +91,41 @@ class AuthController extends Controller
         } else {
             header('Location: ' . INITIAL_ROUTE . '/');
         }
+    }
+
+    public function registro_inicial_cliente()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->header();
+
+            if (!isset($_POST['email']) && !isset($_POST['password'])) {
+                exit(json_encode([
+                    'status' => 'error',
+                    'message' => 'El correo y la contraseña son obligatorios.',
+                ]));
+            }
+
+            $email = $_POST['email'];
+            $password = $this->hash_password($_POST['password']);
+
+            $_SESSION['usuario'] = [
+                'rol' => 'cliente',
+                'correo' => $email,
+            ];
+
+            exit(json_encode([
+                'status' => 'success',
+                'message' => 'Usuario registrado exitosamente.',
+                'to' => INITIAL_ROUTE . '/', // Cambia esto a la ruta a la que quieras redirigir
+            ]));
+        } else {
+            $this->ir_inicio();
+        }
+    }
+
+    private function header()
+    {
+        header('Content-Type: application/json');
     }
 
     public function registrar_cliente()
@@ -210,6 +246,11 @@ class AuthController extends Controller
         header('Location: ' . INITIAL_ROUTE . '/');
     }
 
+    private function ir_inicio()
+    {
+        header('Location: ' . INITIAL_ROUTE . '/');
+        exit;
+    }
 
     private function hash_password($password)
     {

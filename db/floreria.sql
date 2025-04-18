@@ -6,8 +6,9 @@ CREATE TABLE IF NOT EXISTS clientes (
     correo VARCHAR(255) NOT NULL
 );
 
+
 CREATE TABLE IF NOT EXISTS usuarios (
-    curp VARCHAR(18) PRIMARY KEY,
+    email VARCHAR(150) PRIMARY KEY,
     contra VARCHAR(255) NOT NULL,
     tipo TEXT NOT NULL CHECK (
         tipo IN (
@@ -15,7 +16,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
             'empleado',
             'cliente'
         )
-    )
+    ),
+    activo BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS flores (
